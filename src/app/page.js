@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase } from './supabase'
 
 export default function Home() {
   const [parentName, setParentName] = useState('')
