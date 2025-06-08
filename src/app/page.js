@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { supabase } from '../lib/supabase'
 
 export default function Home() {
   const [parentName, setParentName] = useState('')
@@ -8,11 +9,40 @@ export default function Home() {
   const [notes, setNotes] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // For now, just show a success message
-    setSubmitted(true)
-    console.log('Check-in submitted:', { parentName, mood, notes })
+    
+    try {
+      // Save to Supabase
+      const { data, error } = await supabase
+        .from('checkins')
+        .insert([
+          {
+            parent_name: parentName,
+            mood: mood,
+            notes: notes
+          }
+        ])
+
+      if (error) {
+        console.error('Error saving check-in:', error)
+        alert('Error saving check-in. Please try again.')
+        return
+      }
+
+      // Show success message
+      setSubmitted(true)
+      console.log('Check-in saved successfully:', data)
+      
+      // Reset form
+      setParentName('')
+      setMood('')
+      setNotes('')
+      
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error saving check-in. Please try again.')
+    }
   }
 
   if (submitted) {
@@ -42,7 +72,7 @@ export default function Home() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Parent Name
+              Parent's Name
             </label>
             <input
               type="text"
