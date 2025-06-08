@@ -72,7 +72,7 @@ export default function Home() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Parent's Name
+              Parent Name
             </label>
             <input
               type="text"
