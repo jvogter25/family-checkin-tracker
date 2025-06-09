@@ -3,25 +3,49 @@
 import { useState } from 'react'
 import { supabase } from './supabase'
 import Link from 'next/link'
+import { useAuth } from './AuthContext'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function Home() {
   const [parentName, setParentName] = useState('')
   const [mood, setMood] = useState('')
   const [notes, setNotes] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const { user, loading, signOut } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth')
+    }
+  }, [user, loading, router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return null
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     
     try {
-      // Save to Supabase
+      // Save to Supabase with user_id
       const { data, error } = await supabase
         .from('checkins')
         .insert([
           {
             parent_name: parentName,
             mood: mood,
-            notes: notes
+            notes: notes,
+            user_id: user.id
           }
         ])
 
@@ -83,6 +107,16 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Family Check-In Tracker
         </h1>
+        
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-sm text-gray-600">Welcome, {user.email}</span>
+          <button 
+            onClick={signOut}
+            className="text-sm text-red-600 hover:text-red-800"
+          >
+            Sign Out
+          </button>
+        </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

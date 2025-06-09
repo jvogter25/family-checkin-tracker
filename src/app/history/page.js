@@ -3,20 +3,33 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import Link from 'next/link'
+import { useAuth } from '../AuthContext'
+import { useRouter } from 'next/navigation'
 
 export default function History() {
   const [checkins, setCheckins] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user, loading: authLoading, signOut } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
-    fetchCheckins()
-  }, [])
+    if (!authLoading && !user) {
+      router.push('/auth')
+    }
+  }, [user, authLoading, router])
+
+  useEffect(() => {
+    if (user) {
+      fetchCheckins()
+    }
+  }, [user])
 
   const fetchCheckins = async () => {
     try {
       const { data, error } = await supabase
         .from('checkins')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -48,12 +61,16 @@ export default function History() {
     return colors[mood] || 'bg-gray-100 text-gray-800'
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-blue-50 flex items-center justify-center">
         <div className="text-xl text-gray-600">Loading check-ins...</div>
       </div>
     )
+  }
+
+  if (!user) {
+    return null
   }
 
   return (
@@ -62,19 +79,28 @@ export default function History() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Check-in History</h1>
-            <div className="flex space-x-2">
-              <Link 
-                href="/"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Add Check-in
-              </Link>
-              <Link 
-                href="/calendar"
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-              >
-                View Calendar
-              </Link>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
+              <div className="flex space-x-2">
+                <Link 
+                  href="/"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Add Check-in
+                </Link>
+                <Link 
+                  href="/calendar"
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                >
+                  View Calendar
+                </Link>
+                <button 
+                  onClick={signOut}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                >
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
 
