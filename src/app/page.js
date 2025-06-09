@@ -61,9 +61,15 @@ export default function Home() {
           <div className="mt-4">
             <Link 
               href="/history"
+              className="text-blue-500 hover:text-blue-700 underline mr-4"
+            >
+              View History
+            </Link>
+            <Link 
+              href="/calendar"
               className="text-blue-500 hover:text-blue-700 underline"
             >
-              View Check-in History
+              View Calendar
             </Link>
           </div>
         </div>
@@ -133,13 +139,21 @@ export default function Home() {
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <Link 
-            href="/history"
-            className="text-blue-500 hover:text-blue-700 underline"
-          >
-            View Check-in History
-          </Link>
+        <div className="mt-4 text-center space-y-2">
+          <div>
+            <Link 
+              href="/history"
+              className="text-blue-500 hover:text-blue-700 underline mr-4"
+            >
+              View History
+            </Link>
+            <Link 
+              href="/calendar"
+              className="text-blue-500 hover:text-blue-700 underline"
+            >
+              View Calendar
+            </Link>
+          </div>
         </div>
       </div>
     </div>

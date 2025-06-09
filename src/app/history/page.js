@@ -62,12 +62,20 @@ export default function History() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Check-in History</h1>
-            <Link 
-              href="/"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Add New Check-in
-            </Link>
+            <div className="flex space-x-2">
+              <Link 
+                href="/"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Add Check-in
+              </Link>
+              <Link 
+                href="/calendar"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                View Calendar
+              </Link>
+            </div>
           </div>
 
           {checkins.length === 0 ? (
