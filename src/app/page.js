@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from './supabase'
+import Link from 'next/link'
 
 export default function Home() {
   const [parentName, setParentName] = useState('')
@@ -53,10 +54,18 @@ export default function Home() {
           <p className="text-gray-600 mb-4">Thanks for checking in on {parentName}</p>
           <button 
             onClick={() => setSubmitted(false)}
-            className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 mb-4"
           >
             Add Another Check-in
           </button>
+          <div className="mt-4">
+            <Link 
+              href="/history"
+              className="text-blue-500 hover:text-blue-700 underline"
+            >
+              View Check-in History
+            </Link>
+          </div>
         </div>
       </div>
     )
@@ -123,6 +132,15 @@ export default function Home() {
             Record Check-in
           </button>
         </form>
+
+        <div className="mt-4 text-center">
+          <Link 
+            href="/history"
+            className="text-blue-500 hover:text-blue-700 underline"
+          >
+            View Check-in History
+          </Link>
+        </div>
       </div>
     </div>
   )
